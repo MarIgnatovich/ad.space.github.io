@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdSpace - Платформа для продажи рекламы</title>
+    <style>
+        /* Базовые стили */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --gray: #6c757d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7fb;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        h1, h2, h3, h4 {
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-accent {
+            background-color: var(--accent);
+        }
+        
+        .btn-accent:hover {
+            background-color: #d9046d;
+        }
+        
+        /* Шапка - ИСПРАВЛЕНА АДАПТИВНОСТЬ */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent);
+        }
+        
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+        }
+        
+        /* Герой секция - ДОБАВЛЕН ОТСТУП ДЛЯ ШАПКИ */
+        .hero {
+            padding: 150px 0 100px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            margin-top: 70px; /* Отступ для фиксированной шапки */
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        /* О нас */
+        .about {
+            background-color: white;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* Рекламные места */
+        .ad-spaces {
+            background-color: #f5f7fb;
+        }
+        
+        .ad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .ad-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .ad-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .ad-image {
+            height: 200px;
+            background-color: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            font-weight: 600;
+        }
+        
+        .ad-info {
+            padding: 20px;
+        }
+        
+        .ad-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+        .ad-features {
+            list-style: none;
+            margin: 15px 0;
+        }
+        
+        .ad-features li {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ad-features li:before {
+            content: "✓";
+            color: var(--success);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        /* Форма */
+        .contact {
+            background-color: white;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* Футер */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #343a40;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        
+        /* АДАПТИВНОСТЬ ДЛЯ МОБИЛЬНЫХ - УЛУЧШЕНА */
+        @media (max-width: 768px) {
+            /* Улучшенная шапка для мобильных */
+            header {
+                padding: 0.5rem 0;
+            }
+            
+            .header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .logo {
+                font-size: 1.5rem;
+            }
+            
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem 0;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            /* Герой секция с учетом мобильной шапки */
+            .hero {
+                padding: 120px 0 60px;
+                margin-top: 60px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            /* О нас - колонки в столбик */
+            .about-content {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .about-image img {
+                height: 300px;
+            }
+            
+            /* Рекламные карточки */
+            .ad-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            /* Форма */
+            .contact-form {
+                padding: 20px;
+                margin: 0 10px;
+            }
+            
+            /* Уменьшенные отступы секций */
+            section {
+                padding: 60px 0;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
+            }
+        }
+        
+        /* Дополнительные улучшения для очень маленьких экранов */
+        @media (max-width: 480px) {
+            .hero {
+                padding: 100px 0 40px;
+                margin-top: 50px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .about-image img {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Ad<span>Space</span></div>
+                <button class="mobile-menu">☰</button>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Главная</a></li>
+                        <li><a href="#about">О нас</a></li>
+                        <li><a href="#spaces">Рекламные места</a></li>
+                        <li><a href="#contact">Купить рекламу</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Герой секция -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Продажа рекламы на лучших площадках</h1>
+            <p>Мы предлагаем эффективные рекламные решения для вашего бизнеса. Привлекайте целевую аудиторию и увеличивайте продажи с нашими рекламными местами.</p>
+            <a href="#spaces" class="btn btn-accent">Посмотреть места</a>
+        </div>
+    </section>
+
+    <!-- О нас -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2>О нашей платформе</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Почему выбирают нас?</h3>
+                    <p>Мы являемся ведущей платформой для продажи рекламных мест с более чем 10-летним опытом работы в индустрии. Наша команда экспертов поможет вам подобрать оптимальные рекламные решения для достижения ваших бизнес-целей.</p>
+                    <p>Мы сотрудничаем с популярными сайтами, блогами и социальными медиа, чтобы предложить вам широкий выбор рекламных площадок для любого бюджета.</p>
+                    <a href="#contact" class="btn">Связаться с нами</a>
+                </div>
+                <div class="about-image">
+                    <!-- ЗАМЕНИТЕ НА ВАШЕ ИЗОБРАЖЕНИЕ -->
+                    <img src="https://ibb.co/gMff3ztb" alt="Наша команда">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Рекламные места -->
+    <section class="ad-spaces" id="spaces">
+        <div class="container">
+            <h2>Наши рекламные места</h2>
+            <div class="ad-grid">
+                <!-- Карточка 1 -->
+                <div class="ad-card">
+                    <div class="ad-image">
+                        Баннер 728x90
+                    </div>
+                    <div class="ad-info">
+                        <h3>Баннерная реклама</h3>
+                        <p>Размещение на популярных сайтах с высокой посещаемостью</p>
+                        <div class="ad-price">от 5 000 руб./мес</div>
+                        <ul class="ad-features">
+                            <li>Гарантия показов</li>
+                            <li>Таргетирование по интересам</li>
+                            <li>Подробная статистика</li>
+                            <li>Поддержка 24/7</li>
+                        </ul>
+                        <a href="#contact" class="btn">Заказать</a>
+                    </div>
+                </div>
+                
+                <!-- Карточка 2 -->
+                <div class="ad-card">
+                    <div class="ad-image">
+                        Статья/Обзор
+                    </div>
+                    <div class="ad-info">
+                        <h3>Нативная реклама</h3>
+                        <p>Органичное размещение в контенте популярных блогов</p>
+                        <div class="ad-price">от 10 000 руб./статья</div>
+                        <ul class="ad-features">
+                            <li>Естественное восприятие</li>
+                            <li>Высокий CTR</li>
+                            <li>Авторский контент</li>
+                            <li>Социальные сигналы</li>
+                        </ul>
+                        <a href="#contact" class="btn">Заказать</a>
+                    </div>
+                </div>
+                
+                <!-- Карточка 3 -->
+                <div class="ad-card">
+                    <div class="ad-image">
+                        Рассылка
+                    </div>
+                    <div class="ad-info">
+                        <h3>Email-рассылка</h3>
+                        <p>Реклама в рассылках с высокой конверсией</p>
+                        <div class="ad-price">от 15 000 руб./рассылка</div>
+                        <ul class="ad-features">
+                            <li>Точное таргетирование</li>
+                            <li>Высокая конверсия</li>
+                            <li>Гарантия открытий</li>
+                            <li>A/B тестирование</li>
+                        </ul>
+                        <a href="#contact" class="btn">Заказать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контактная форма -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>Купить рекламу</h2>
+            <div class="contact-form">
+                <form id="adForm">
+                    <div class="form-group">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="adType">Тип рекламы</label>
+                        <select id="adType" class="form-control" required>
+                            <option value="">Выберите тип рекламы</option>
+                            <option value="banner">Баннерная реклама</option>
+                            <option value="native">Нативная реклама</option>
+                            <option value="email">Email-рассылка</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="budget">Бюджет (руб.)</label>
+                        <input type="number" id="budget" class="form-control" min="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Дополнительная информация</label>
+                        <textarea id="message" class="form-control"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-accent">Отправить заявку</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>AdSpace</h3>
+                    <p>Лучшая платформа для покупки и продажи рекламы. Мы помогаем бизнесу расти с 2010 года.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Наши услуги</h3>
+                    <ul>
+                        <li><a href="#spaces">Баннерная реклама</a></li>
+                        <li><a href="#spaces">Нативная реклама</a></li>
+                        <li><a href="#spaces">Email-рассылки</a></li>
+                        <li><a href="#spaces">Социальные медиа</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Контакты</h3>
+                    <ul>
+                        <li>Email: info@adspace.ru</li>
+                        <li>Телефон: +7 (999) 123-45-67</li>
+                        <li>Адрес: Москва, ул. Рекламная, 15</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 AdSpace. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Мобильное меню
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            document.querySelector('nav ul').classList.toggle('show');
+        });
+
+        // Плавная прокрутка с учетом высоты шапки
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const headerHeight = document.querySelector('header').offsetHeight;
+                    const targetPosition = targetElement.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Закрыть мобильное меню после клика
+                    if (document.querySelector('nav ul').classList.contains('show')) {
+                        document.querySelector('nav ul').classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        // Обработка формы
+        document.getElementById('adForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Здесь должна быть логика отправки данных на сервер
+            // Для демонстрации просто покажем сообщение
+            alert('Спасибо за вашу заявку! Мы свяжемся с вами в ближайшее время.');
+            this.reset();
+        });
+
+        // Фиксированная шапка при прокрутке
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(67, 97, 238, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+                header.style.backdropFilter = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
